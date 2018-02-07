@@ -1,13 +1,11 @@
-// window.addEventListener('load', function () {
 (function () {
-    const startButton = document.querySelector("#startButton");
-    const inputPlayerOne = document.querySelector("#inputPlayerOne");
-    const inputPlayerTwo = document.querySelector("#inputPlayerTwo");
-    const warningMessage = document.querySelector("#warningMessage");
-    const statusMessage = document.querySelector("#statusMessage");
-    const turnMessage = document.querySelector("#turnMessage");
-    // const playercontainer = document.querySelector(".player-container");
-    // const players = document.querySelectorAll(".player-container input");
+    // const startButton = document.querySelector("#startButton");
+    // const inputPlayerOne = document.querySelector("#inputPlayerOne");
+    // const inputPlayerTwo = document.querySelector("#inputPlayerTwo");
+    // const warningMessage = document.querySelector("#warningMessage");
+    // const statusMessage = document.querySelector("#statusMessage");
+    // const turnMessage = document.querySelector("#turnMessage");
+    const playercontainer = document.querySelector(".player-container");
     const kickButton = document.createElement('button');
     const max = 10;
     const min = 1;
@@ -17,10 +15,7 @@
     let turnNumberPlayerTwo = 1;
     let scorePlayerOne = 0;
     let scorePlayerTwo = 0;
-    let isPlaying = false;
-
-    scoreMessagePlayerTwo.textContent = `Score Player Two: ${scorePlayerTwo}`;
-    scoreMessagePlayerOne.textContent = `Score Player One: ${scorePlayerOne}`;
+    let sw = 0;
 
     function startGame() {
         startButton.style.visibility = 'hidden';
@@ -28,54 +23,91 @@
         inputPlayerOne.disabled = true;
         playerOneName = inputPlayerOne.value;
         playerTwoName = inputPlayerTwo.value;
+        scoreMessagePlayerTwo.textContent = `Score Player Two: ${scorePlayerTwo}`;
+        scoreMessagePlayerOne.textContent = `Score Player One: ${scorePlayerOne}`;
         createKickButton();
     }
 
     function validateInputs() {
         if (inputPlayerOne.value == inputPlayerTwo.value) {
-            warningMessage.textContent = 'Warning, names are the same';
+            setWarningMessage('Warning, names can not be the same, please change it to start the game', 'red');
             startButton.disabled = true;
         } else {
-            if (inputPlayerOne.value != "" && inputPlayerTwo.value != "") {
+            if (inputPlayerOne.value != '' && inputPlayerTwo.value != '') {
                 startButton.disabled = false;
-                warningMessage.textContent = '';
+                setWarningMessage('', '');
             } else {
                 startButton.disabled = true;
-                warningMessage.textContent = '';
+                setWarningMessage('', '');
             }
         }
+    }
+
+    function setWarningMessage(p_message, p_color) {
+        warningMessage.textContent = p_message;
+        warningMessage.style.backgroundColor = p_color;
     }
 
     function createKickButton() {
         kickButton.textContent = 'Kick Penalty';
         kickButton.addEventListener('click', prepareTurn);
-        document.body.appendChild(kickButton);
+        playercontainer.appendChild(kickButton);
     }
 
     function prepareTurn() {
-        setTimeout(function () {
-            registerPenalPlayerOne();
-        }, 1000);
+        // setTimeout(function () {
+        //     kickButton.textContent = 'Playing..................';
+        //     registerPenalPlayerOne();
+        // }, 1000);
 
-        setTimeout(function () {
+        // setTimeout(function () {
+        //     registerPenalPlayerTwo();
+        //     kickButton.textContent = 'Kick Penalty';
+        // }, 5000);
+
+        if (sw == 0) {
+            registerPenalPlayerOne();
+            sw = 1;
+        } else {
             registerPenalPlayerTwo();
-        }, 5000);
+            sw = 0;
+        }
+    }
+
+    function checkScore() {
+        turnMessage.style.color = "green";
+        if (scorePlayerOne > scorePlayerTwo) {
+            turnMessage.textContent = "Player One Wins!";
+        } else if (scorePlayerOne < scorePlayerTwo) {
+            turnMessage.textContent = "Player Two Wins!";
+        } else {
+            turnMessage.textContent = "Empate!";
+            kickButton.disabled = false;
+            turnNumberPlayerOne = 1;
+            turnNumberPlayerTwo = 1;
+        }
+    }
+
+    function setStatusMessage(p_message, p_color) {
+        statusMessage.textContent = p_message;
+        statusMessage.style.backgroundColor = p_color;
     }
 
     function registerPenalPlayerOne() {
-        turnMessage.textContent = `Turn number: ${turnNumberPlayerOne} for player: ${playerOneName}`;
+        turnMessage.textContent = `Player: ${playerOneName} - Turn: ${turnNumberPlayerOne} `;
         if (turnNumberPlayerOne > 5) {
             kickButton.disabled = true;
-            statusMessage.textContent = "game over";
+            setStatusMessage("Game Over!", "gray");
+            checkScore();
         } else {
             let golKeeperPoint = Math.floor(Math.random() * max) + min;
             let penaltyKickerPoint = Math.floor(Math.random() * max) + min;
             if (golKeeperPoint < penaltyKickerPoint) {
-                statusMessage.textContent = "goal";
+                setStatusMessage("GOAL!!!!!!", "green");
                 turnNumberPlayerOne += 1;
                 scorePlayerOne += 1;
             } else {
-                statusMessage.textContent = "failed penalty";
+                setStatusMessage("Failed Penalty  :(", "red");
                 turnNumberPlayerOne += 1;
             }
         }
@@ -83,21 +115,21 @@
     }
 
     function registerPenalPlayerTwo() {
-        turnMessage.textContent = `Turn number: ${turnNumberPlayerTwo} for player: ${playerTwoName}`;
+        turnMessage.textContent = `Player: ${playerTwoName} - Turn: ${turnNumberPlayerTwo}`;
         if (turnNumberPlayerTwo > 5) {
             kickButton.disabled = true;
-            statusMessage.textContent = "game over";
+            setStatusMessage("Game Over!", "gray");
+            checkScore();
         } else {
             let golKeeperPoint = Math.floor(Math.random() * max) + min;
             let penaltyKickerPoint = Math.floor(Math.random() * max) + min;
             if (golKeeperPoint < penaltyKickerPoint) {
-                statusMessage.textContent = "goal";
+                setStatusMessage("GOAL!!!!!!", "green");
                 turnNumberPlayerTwo += 1;
                 scorePlayerTwo += 1;
             } else {
-                statusMessage.textContent = "failed penalty";
+                setStatusMessage("Failed Penalty  :(", "red");
                 turnNumberPlayerTwo += 1;
-
             }
         }
         scoreMessagePlayerTwo.textContent = `Score Player Two: ${scorePlayerTwo}`;
