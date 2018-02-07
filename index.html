@@ -23,16 +23,22 @@
 <body>
 	<p id="warningMessage"></p>
 
-	<label>Player One</label>
-	<input type="text" id="inputPlayerOne" value="" placeholder="Player One Name">
+	<div class="player-container">
+		<label>Player One</label>
+		<input type="text" id="inputPlayerOne" value="" placeholder="Player One Name">
 
-	<label>Player Two</label>
-	<input type="text" id="inputPlayerTwo" value="" placeholder="Player Two Name">
-
+		<label>Player Two</label>
+		<input type="text" id="inputPlayerTwo" value="" placeholder="Player Two Name">
+	</div>
 	<button id="startButton" disabled>Start</button>
 
+	<p id="scoreMessagePlayerOne"></p>
+	<p id="scoreMessagePlayerTwo"></p>
+
+	
 	<p id="turnMessage"></p>
 	<p id="statusMessage"></p>
+
 	<script src="global.js"></script>
 </body>
 
